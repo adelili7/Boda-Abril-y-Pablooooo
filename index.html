@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Abril & Pablo — Invitación</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Alex+Brush&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Parisienne&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg-cream:#F8F5F0;--accent:#B8DDE6;--deep:#2B2A2F;--card-bg: rgba(255,255,255,0.85);--rose-gold:#d6a79b}
+html,body{height:100%;margin:0;font-family:Quicksand,system-ui,Arial;background:var(--bg-cream);color:var(--deep);-webkit-font-smoothing:antialiased;cursor:none}
+main{position:relative}
+.sections{perspective:1200px}
+.section{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;box-sizing:border-box;position:absolute;inset:0;opacity:0;transform-origin:center;transition:transform .9s cubic-bezier(.2,.9,.2,1),opacity .6s ease;backface-visibility:hidden}
+.section.active{opacity:1;transform:rotateY(0) translateZ(0)}
+.section.prev{opacity:0;transform:rotateY(-90deg) translateZ(-200px)}
+.section.next{opacity:0;transform:rotateY(90deg) translateZ(-200px)}
+.portada{background-image:url('fondo_floral.jpg');background-size:cover;background-position:center}
+.internal{background-size:cover;background-position:center}
+.wishes{background-image:url('fondo_floral2.jpg');background-size:cover;background-position:center}
+.gallery-section{background-image:url('fondo_floral3.jpg');background-size:cover;background-position:center}
+.final{background-image:url('fondo_floral4.png');background-size:cover;background-position:center}
+.overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.6));}
+.card{position:relative;z-index:2;max-width:980px;width:100%;background:var(--card-bg);backdrop-filter: blur(6px);border-radius:18px;padding:28px;box-shadow:0 10px 35px rgba(0,0,0,0.12)}
+.headline{font-family:'Parisienne',cursive;font-size:64px;text-align:center;margin:0 0 8px;color:#2f2f2f}
+.sub{font-family:'Alex Brush',cursive;font-size:42px;text-align:center;color:#3d3d3d;margin:0 0 12px}
+.ring-button{display:block;margin:14px auto;padding:0;border:0;background:transparent;cursor:pointer;outline:none;position:relative}
+.ring-svg{width:240px;height:240px;display:block}
+.ring-rotate{animation:ringSpin 14s linear infinite;transform-origin:100px 100px}
+@keyframes ringSpin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+.ring-button:hover{transform:scale(1.03)}
+.ring-spark{position:absolute;left:50%;top:35%;width:140px;height:140px;transform:translate(-50%,-50%);pointer-events:none;border-radius:50%;opacity:0}
+.ring-button.clicked .ring-spark{animation:spark 900ms ease-out forwards}
+@keyframes spark{0%{opacity:0;transform:translate(-50%,-50%) scale(0.6);}30%{opacity:1;transform:translate(-50%,-50%) scale(1.05);}100%{opacity:0;transform:translate(-50%,-50%) scale(1.6);}}
+.verse{font-style:italic;text-align:center;margin-top:12px;color:#3d3d3d;font-family:'Playfair Display',serif;font-size:20px}
+.countdown{display:flex;gap:10px;justify-content:center;margin-top:12px}
+.countdown .box{min-width:64px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.95);text-align:center}
+.countdown .num{font-family:'Playfair Display';font-size:18px}
+.countdown .label{font-size:11px;color:#666}
+.magicBtn{padding:6px 10px;margin:6px 4px;border-radius:12px;background:linear-gradient(45deg,#a7e4ff,#f8f5f0);color:#2B2A2F;font-family:'Quicksand',sans-serif;font-weight:600;font-size:13px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.12)}
+.parents-grid{display:flex;justify-content:space-between;gap:16px;align-items:center}
+.parents-grid .col{flex:1;min-width:220px}
+.parent-names{font-family:'Alex Brush',cursive;font-size:26px;color:#2B2A2F;line-height:1.2}
+.parent-left{text-align:left}
+.parent-right{text-align:right}
+.honor{font-family:'Playfair Display',serif;font-size:22px;text-align:center;margin-top:22px}
+.couple{display:flex;flex-direction:column;align-items:center;gap:12px}
+.photo{max-width:420px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.12)}
+.itinerary{display:flex;flex-direction:column;gap:12px;font-size:16px}
+.it-item{display:flex;gap:12px;align-items:center}
+.it-icon{width:48px;height:48px;border-radius:10px;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center}
+.gallery-carousel{display:flex;justify-content:center;gap:12px;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+.gallery-carousel img{width:180px;border-radius:10px;transition:transform .4s, opacity .4s;flex-shrink:0;}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:9999}
+.modal.open{display:flex}
+.modal .box{background:white;padding:20px;border-radius:10px;max-width:520px;width:100%}
+.magicHeart{position:fixed;pointer-events:none;z-index:99999;width:26px;height:26px;opacity:0;transform:translate(-50%,-50%) scale(1);animation:heartFade 1000ms forwards}
+@keyframes heartFade{0%{opacity:1;transform:translate(-50%,-50%) scale(1);}100%{opacity:0;transform:translate(-50%,-120%) scale(0.6)}}
+.small{font-size:13px}
+@media (max-width:900px){.headline{font-size:48px}.sub{font-size:30px}}
+</style>
+</head>
+<body>
+<audio id="marcha" src="marcha_nupcial.mp3" preload="auto" loop autoplay></audio>
+<audio id="eternamente" src="eternamente.mp3" preload="auto"></audio>
+
+<div class="sections">
+
+<!-- Portada -->
+<section class="section portada active" data-name="portada">
+  <div class="overlay"></div>
+  <div class="card">
+    <h1 class="headline">Abril & Pablo</h1>
+    <h2 class="sub">¡Sí, acepto!</h2>
+    <button class="ring-button" id="ringBtn" aria-label="Abrir invitación">
+      <div class="ring-spark"></div>
+      <svg class="ring-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="ringMetal" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e9eef2"/><stop offset="60%" stop-color="#c9ccd0"/><stop offset="100%" stop-color="var(--rose-gold)"/></radialGradient>
+          <radialGradient id="blueGem" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#dff6ff"/><stop offset="60%" stop-color="#66c9ff"/><stop offset="100%" stop-color="#004c99"/></radialGradient>
+        </defs>
+        <g class="ring-rotate">
+          <ellipse cx="100" cy="100" rx="40" ry="12" stroke="url(#ringMetal)" stroke-width="12" fill="none" />
+          <path d="M100 58 L110 70 L100 86 L90 70 Z" fill="url(#blueGem)" stroke="#fff" stroke-opacity="0.4" stroke-width="0.6">
+            <animateTransform attributeName="transform" type="scale" values="1;1.03;1" dur="2.6s" repeatCount="indefinite"/>
+          </path>
+          <circle cx="100" cy="60" r="2" fill="#fff" opacity="0.9"><animate attributeName="r" values="2;4;2" dur="1.6s" repeatCount="indefinite"/></circle>
+        </g>
+      </svg>
+    </button>
+    <div style="text-align:center;margin-top:8px;">
+      <button class="magicBtn" id="clickRingBtn">Clic en el anillo</button>
+      <button class="magicBtn" id="pauseMarchBtn">Pausar marcha</button>
+      <button class="magicBtn" id="toggleEtern">Reproducir eternamente</button>
+    </div>
+    <p class="verse">"Quien halla esposa halla el bien"<br><strong>Proverbios 18:22</strong></p>
+    <div class="countdown" id="countdown"></div>
+  </div>
+</section>
+
+<!-- Padres -->
+<section class="section internal" data-name="padres">
+  <div class="overlay"></div>
+  <div class="card">
+    <div class="parents-grid">
+      <div class="col"><div class="parent-names parent-left">Eva Aguilar Rendón<br>Pedro Pérez Hernández</div></div>
+      <div class="col"><div class="parent-names parent-right">Saray Hernández Santana<br>Pablo Tinoco Carranza <span title="finanzas y familia">(🤍)</span></div></div>
+    </div>
+    <p class="honor">Tienen el honor de invitarte a la boda de sus hijos</p>
+  </div>
+</section>
+
+<!-- Novios -->
+<section class="section internal" data-name="novios">
+  <div class="overlay"></div>
+  <div class="card couple">
+    <img class="photo" src="vestimenta_formal.jpg" alt="Abril y Pablo">
+    <h2 class="sub">Abril & Pablo</h2>
+    <div class="itinerary">
+      <div class="it-item"><div class="it-icon">💒</div><div>Boda: 25 de Abril 2026</div></div>
+      <div class="it-item"><div class="it-icon">🕑</div><div>Ceremonia: 18:00 hrs</div></div>
+      <div class="it-item"><div class="it-icon">🥂</div><div>Recepción: Hotel Paraíso</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Galería mejorada -->
+<section class="section gallery-section" data-name="galeria">
+  <div class="overlay"></div>
+  <div class="card" style="padding:16px;overflow:hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <button class="magicBtn" id="prevSlide">&#8592;</button>
+      <h2 class="sub" style="margin:0">Galería de Abril & Pablo</h2>
+      <button class="magicBtn" id="nextSlide">&#8594;</button>
+    </div>
+    <div class="gallery-carousel" id="carousel">
+      <img src="galeria1.jpg" alt="Galería 1">
+      <img src="galeria2.jpg" alt="Galería 2">
+      <img src="galeria3.jpg" alt="Galería 3">
+      <img src="galeria4.jpg" alt="Galería 4">
+      <img src="galeria5.jpg" alt="Galería 5">
+      <img src="galeria6.jpg" alt="Galería 6">
+    </div>
+  </div>
+</section>
+
+<!-- Mensajes -->
+<section class="section wishes" data-name="wishes">
+  <div class="overlay"></div>
+  <div class="card">
+    <h2 class="sub">Deseos y Mensajes</h2>
+    <form action="https://script.google.com/macros/s/AKfycbxG72-raGQy1MSHhpCDU6_zEHfEJ6HLFeA2gIvWVrsyMpt3AgGREIdQlFDrn-ZJ8PzQ/exec" method="post" target="_blank">
+      <input type="text" name="name" placeholder="Tu nombre" required style="width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ccc">
+      <textarea name="message" placeholder="Tu mensaje" required style="width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ccc"></textarea>
+      <button type="submit" class="magicBtn">Enviar</button>
+    </form>
+  </div>
+</section>
+
+<!-- Sección final -->
+<section class="section final" data-name="final">
+  <div class="overlay"></div>
+  <div class="card couple">
+    <h2 class="sub">Con amor eterno<br>Abril y Pablo</h2>
+    <img src="momento7.png" alt="Momento Especial" style="max-width:360px;border-radius:12px;margin-top:16px">
+    <div style="margin-top:14px;text-align:center;">
+      <button class="magicBtn" id="playEtern">▶️ Reproducir / Pausar canción</button>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script>
+// Secciones
+const sections=document.querySelectorAll('.section');
+let current=0;
+function showSection(index){
+  sections.forEach((sec,i)=>{
+    sec.classList.remove('active','prev','next');
+    if(i===index) sec.classList.add('active');
+    else if(i<index) sec.classList.add('prev');
+    else sec.classList.add('next');
+  });
+}
+document.getElementById('ringBtn').addEventListener('click',()=>{showSection(1);});
+
+// Carrusel galería
+const carousel=document.getElementById('carousel');
+const imgs=carousel.querySelectorAll('img');
+let currentIndex=0;
+function updateCarousel(){
+  imgs.forEach((img,i)=>{
+    const offset=i-currentIndex;
+    img.style.transform=`scale(${offset===0?1:0.75}) translateX(${offset*10}px) rotateY(${offset*10}deg)`;
+    img.style.opacity=offset===0?1:0.5;
+  });
+}
+updateCarousel();
+document.getElementById('prevSlide').addEventListener('click',()=>{currentIndex=(currentIndex-1+imgs.length)%imgs.length;updateCarousel();});
+document.getElementById('nextSlide').addEventListener('click',()=>{currentIndex=(currentIndex+1)%imgs.length;updateCarousel();});
+let startX=null;
+carousel.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;});
+carousel.addEventListener('touchend',e=>{if(startX===null) return; let endX=e.changedTouches[0].clientX; let diff=endX-startX; if(diff>40){currentIndex=(currentIndex-1+imgs.length)%imgs.length;updateCarousel();} else if(diff<-40){currentIndex=(currentIndex+1)%imgs.length;updateCarousel();} startX=null;});
+
+// Botones audio
+const etern=document.getElementById('eternamente');
+document.getElementById('toggleEtern').addEventListener('click',()=>{etern.paused?etern.play():etern.pause();});
+document.getElementById('playEtern').addEventListener('click',()=>{etern.paused?etern.play():etern.pause();});
+const marcha=document.getElementById('marcha');
+document.getElementById('pauseMarchBtn').addEventListener('click',()=>{marcha.paused?marcha.play():marcha.pause();});
+
+// Corazones clic
+document.getElementById('clickRingBtn').addEventListener('click',()=>{
+  const heart=document.createElement('div');heart.classList.add('magicHeart');heart.textContent='❤️';document.body.appendChild(heart);
+  heart.style.left=(window.innerWidth/2)+'px';heart.style.top=(window.innerHeight/2)+'px';
+  setTimeout(()=>heart.remove(),1000);
+});
+</script>
+</body>
+</html>
