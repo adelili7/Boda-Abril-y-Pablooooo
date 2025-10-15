@@ -2,219 +2,352 @@
 <html lang="es">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Abril & Pablo — Invitación</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Abril & Pablo — Invitación Interactiva</title>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Alex+Brush&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Parisienne&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg-cream:#F8F5F0;--accent:#B8DDE6;--deep:#2B2A2F;--card-bg: rgba(255,255,255,0.85);--rose-gold:#d6a79b}
-html,body{height:100%;margin:0;font-family:Quicksand,system-ui,Arial;background:var(--bg-cream);color:var(--deep);-webkit-font-smoothing:antialiased;cursor:none}
-main{position:relative}
-.sections{perspective:1200px}
-.section{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;box-sizing:border-box;position:absolute;inset:0;opacity:0;transform-origin:center;transition:transform .9s cubic-bezier(.2,.9,.2,1),opacity .6s ease;backface-visibility:hidden}
-.section.active{opacity:1;transform:rotateY(0) translateZ(0)}
-.section.prev{opacity:0;transform:rotateY(-90deg) translateZ(-200px)}
-.section.next{opacity:0;transform:rotateY(90deg) translateZ(-200px)}
-.portada{background-image:url('fondo_floral.jpg');background-size:cover;background-position:center}
-.internal{background-size:cover;background-position:center}
-.wishes{background-image:url('fondo_floral2.jpg');background-size:cover;background-position:center}
-.gallery-section{background-image:url('fondo_floral3.jpg');background-size:cover;background-position:center}
-.final{background-image:url('fondo_floral4.png');background-size:cover;background-position:center}
+/* ================= ESTILOS GENERALES ================= */
+:root{
+  --bg-cream:#F8F5F0;
+  --accent:#B8DDE6;
+  --deep:#2B2A2F;
+  --card-bg: rgba(255,255,255,0.85);
+  --rose-gold:#d6a79b;
+  --gold-soft:#f1d7b7;
+  --spark-color: #66c9ff;
+}
+html,body{height:100%;margin:0;font-family:Quicksand,system-ui,Arial;background:var(--bg-cream);color:var(--deep);-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none;}
+.sections{perspective:1200px;overflow:hidden;position:relative;}
+.section{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;position:absolute;inset:0;opacity:0;transform-origin:center;transition:transform .9s cubic-bezier(.2,.9,.2,1),opacity .6s ease;backface-visibility:hidden;}
+.section.active{opacity:1;transform:rotateY(0) translateZ(0);z-index:2;}
+.section.prev,.section.next{opacity:0;transform:rotateY(90deg) translateZ(-200px);z-index:1;}
+
+/* --- Fondos florales por sección --- */
+.portada{background-image:url('fondo_floral.jpg');background-size:cover;background-position:center;}
+.internal{background-size:cover;background-position:center;}
+.internal:nth-of-type(2){background-image:url('fondo_floral1.png');}
+.internal:nth-of-type(3){background-image:url('fondo_floral2.jpg');}
+.internal:nth-of-type(4){background-image:url('fondo_floral3.jpg');}
+.final{background-image:url('fondo_floral4.png');background-size:cover;background-position:center;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+
 .overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.6));}
-.card{position:relative;z-index:2;max-width:980px;width:100%;background:var(--card-bg);backdrop-filter: blur(6px);border-radius:18px;padding:28px;box-shadow:0 10px 35px rgba(0,0,0,0.12)}
-.headline{font-family:'Parisienne',cursive;font-size:64px;text-align:center;margin:0 0 8px;color:#2f2f2f}
-.sub{font-family:'Alex Brush',cursive;font-size:42px;text-align:center;color:#3d3d3d;margin:0 0 12px}
-.ring-button{display:block;margin:14px auto;padding:0;border:0;background:transparent;cursor:pointer;outline:none;position:relative}
-.ring-svg{width:240px;height:240px;display:block}
-.ring-rotate{animation:ringSpin 14s linear infinite;transform-origin:100px 100px}
-@keyframes ringSpin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
-.ring-button:hover{transform:scale(1.03)}
-.ring-spark{position:absolute;left:50%;top:35%;width:140px;height:140px;transform:translate(-50%,-50%);pointer-events:none;border-radius:50%;opacity:0}
-.ring-button.clicked .ring-spark{animation:spark 900ms ease-out forwards}
-@keyframes spark{0%{opacity:0;transform:translate(-50%,-50%) scale(0.6);}30%{opacity:1;transform:translate(-50%,-50%) scale(1.05);}100%{opacity:0;transform:translate(-50%,-50%) scale(1.6);}}
-.verse{font-style:italic;text-align:center;margin-top:12px;color:#3d3d3d;font-family:'Playfair Display',serif;font-size:20px}
-.countdown{display:flex;gap:10px;justify-content:center;margin-top:12px}
-.countdown .box{min-width:64px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.95);text-align:center}
-.countdown .num{font-family:'Playfair Display';font-size:18px}
-.countdown .label{font-size:11px;color:#666}
-.magicBtn{padding:6px 10px;margin:6px 4px;border-radius:12px;background:linear-gradient(45deg,#a7e4ff,#f8f5f0);color:#2B2A2F;font-family:'Quicksand',sans-serif;font-weight:600;font-size:13px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.12)}
-.parents-grid{display:flex;justify-content:space-between;gap:16px;align-items:center}
-.parents-grid .col{flex:1;min-width:220px}
-.parent-names{font-family:'Alex Brush',cursive;font-size:26px;color:#2B2A2F;line-height:1.2}
-.parent-left{text-align:left}
-.parent-right{text-align:right}
-.honor{font-family:'Playfair Display',serif;font-size:22px;text-align:center;margin-top:22px}
-.couple{display:flex;flex-direction:column;align-items:center;gap:12px}
-.photo{max-width:420px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.12)}
-.itinerary{display:flex;flex-direction:column;gap:12px;font-size:16px}
-.it-item{display:flex;gap:12px;align-items:center}
-.it-icon{width:48px;height:48px;border-radius:10px;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center}
-.gallery-carousel{display:flex;justify-content:center;gap:12px;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
-.gallery-carousel img{width:180px;border-radius:10px;transition:transform .4s, opacity .4s;flex-shrink:0;}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:9999}
-.modal.open{display:flex}
-.modal .box{background:white;padding:20px;border-radius:10px;max-width:520px;width:100%}
-.magicHeart{position:fixed;pointer-events:none;z-index:99999;width:26px;height:26px;opacity:0;transform:translate(-50%,-50%) scale(1);animation:heartFade 1000ms forwards}
+.card{position:relative;z-index:2;max-width:980px;width:100%;background:var(--card-bg);backdrop-filter: blur(6px);border-radius:18px;padding:28px;box-shadow:0 10px 35px rgba(0,0,0,0.12);}
+.headline{font-family:'Great Vibes',cursive;font-size:72px;text-align:center;margin:0 0 8px;color:#2f2f2f;}
+.sub{font-family:'Parisienne',cursive;font-size:48px;text-align:center;color:#3d3d3d;margin:0 0 12px;}
+.verse{font-style:italic;text-align:center;margin-top:12px;color:#3d3d3d;font-family:'Playfair Display',serif;font-size:20px;}
+.countdown{display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap;}
+.countdown .box{min-width:60px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.95);text-align:center;}
+.countdown .num{font-family:'Playfair Display';font-size:18px;}
+.countdown .label{font-size:11px;color:#666;}
+.parents-grid{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;}
+.parents-grid .col{flex:1;min-width:220px;}
+.parent-names{font-family:'Alex Brush',cursive;font-size:26px;color:#2B2A2F;line-height:1.2;word-break:break-word;}
+.parent-left{text-align:left;}
+.parent-right{text-align:right;}
+.honor{font-family:'Playfair Display',serif;font-size:22px;text-align:center;margin-top:22px;}
+.couple{display:flex;flex-direction:column;align-items:center;gap:12px;}
+.photo{max-width:100%;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.12);}
+.itinerary{display:flex;flex-direction:column;gap:12px;font-size:16px;}
+.it-item{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+.it-icon{width:48px;height:48px;border-radius:10px;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;}
+.gallery-grid{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.gallery-grid img{width:160px;height:110px;object-fit:cover;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.12);opacity:0;transform:translateY(20px);transition:opacity 0.6s ease, transform 0.6s ease;cursor:pointer;}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.modal.open{opacity:1;pointer-events:auto;}
+.modal .box{background:white;padding:20px;border-radius:10px;max-width:90%;max-height:90%;overflow:auto;}
+.modal img{width:100%;height:auto;border-radius:12px;}
+.magicHeart{position:fixed;pointer-events:none;z-index:99999;width:26px;height:26px;opacity:0;transform:translate(-50%,-50%) scale(1);animation:heartFade 1000ms forwards;}
 @keyframes heartFade{0%{opacity:1;transform:translate(-50%,-50%) scale(1);}100%{opacity:0;transform:translate(-50%,-120%) scale(0.6)}}
-.small{font-size:13px}
-@media (max-width:900px){.headline{font-size:48px}.sub{font-size:30px}}
+.audioBtn{position:fixed;bottom:20px;right:20px;width:48px;height:48px;border-radius:50%;background:var(--gold-soft);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.2);animation:fadePulse 2s ease-in-out infinite;z-index:999;}
+@keyframes fadePulse{0%,100%{opacity:0.7}50%{opacity:1}}
+.ring-button{display:block;margin:14px auto;padding:0;border:0;background:transparent;cursor:pointer;outline:none;position:relative;}
+.ring-svg{width:240px;height:240px;display:block;}
+.ring-rotate{animation:ringSpin 14s linear infinite;transform-origin:120px 120px;}
+@keyframes ringSpin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+.ring-button:hover{transform:scale(1.05);}
+.ring-spark{position:absolute;left:50%;top:35%;width:140px;height:140px;transform:translate(-50%,-50%);pointer-events:none;border-radius:50%;opacity:0;}
+.ring-button.clicked .ring-spark{animation:spark 900ms ease-out forwards;}
+@keyframes spark{0%{opacity:0;transform:translate(-50%,-50%) scale(0.6);}30%{opacity:1;transform:translate(-50%,-50%) scale(1.05);}100%{opacity:0;transform:translate(-50%,-50%) scale(1.6);}}
+.magicBtn{padding:6px 16px;background:var(--accent);border:none;border-radius:8px;color:#2B2A2F;font-weight:600;cursor:pointer;margin-top:12px;}
+@media (max-width:900px){.headline{font-size:48px}.sub{font-size:30px}.parents-grid{flex-direction:column;align-items:center}.parent-left,.parent-right{text-align:center}}
+/* ================= CSS PARA IMPRESIÓN ================= */
+@media print {
+  body{cursor:auto;background:none;}
+  .section{position:relative;opacity:1;transform:none;}
+  .audioBtn,.ring-button,.magicBtn,#shareBtn,#printBtn,#addCalendar{display:none;}
+  .overlay{display:none;}
+  .card{background:transparent;box-shadow:none;padding:0;}
+}
 </style>
 </head>
 <body>
+
 <audio id="marcha" src="marcha_nupcial.mp3" preload="auto" loop autoplay></audio>
-<audio id="eternamente" src="eternamente.mp3" preload="auto"></audio>
+<audio id="eternamente" src="eternamente.mp3" preload="auto" loop></audio>
 
 <div class="sections">
 
-<!-- Portada -->
+<!-- ================= PORTADA ================= -->
 <section class="section portada active" data-name="portada">
-  <div class="overlay"></div>
-  <div class="card">
-    <h1 class="headline">Abril & Pablo</h1>
-    <h2 class="sub">¡Sí, acepto!</h2>
-    <button class="ring-button" id="ringBtn" aria-label="Abrir invitación">
-      <div class="ring-spark"></div>
-      <svg class="ring-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="ringMetal" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e9eef2"/><stop offset="60%" stop-color="#c9ccd0"/><stop offset="100%" stop-color="var(--rose-gold)"/></radialGradient>
-          <radialGradient id="blueGem" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#dff6ff"/><stop offset="60%" stop-color="#66c9ff"/><stop offset="100%" stop-color="#004c99"/></radialGradient>
-        </defs>
-        <g class="ring-rotate">
-          <ellipse cx="100" cy="100" rx="40" ry="12" stroke="url(#ringMetal)" stroke-width="12" fill="none" />
-          <path d="M100 58 L110 70 L100 86 L90 70 Z" fill="url(#blueGem)" stroke="#fff" stroke-opacity="0.4" stroke-width="0.6">
-            <animateTransform attributeName="transform" type="scale" values="1;1.03;1" dur="2.6s" repeatCount="indefinite"/>
-          </path>
-          <circle cx="100" cy="60" r="2" fill="#fff" opacity="0.9"><animate attributeName="r" values="2;4;2" dur="1.6s" repeatCount="indefinite"/></circle>
-        </g>
-      </svg>
-    </button>
-    <div style="text-align:center;margin-top:8px;">
-      <button class="magicBtn" id="clickRingBtn">Clic en el anillo</button>
-      <button class="magicBtn" id="pauseMarchBtn">Pausar marcha</button>
-      <button class="magicBtn" id="toggleEtern">Reproducir eternamente</button>
-    </div>
-    <p class="verse">"Quien halla esposa halla el bien"<br><strong>Proverbios 18:22</strong></p>
-    <div class="countdown" id="countdown"></div>
-  </div>
+<div class="overlay"></div>
+<div class="card">
+<h1 class="headline">Abril & Pablo</h1>
+<h2 class="sub">¡Da clic en el anillo para abrir!</h2>
+<button class="ring-button" id="ringBtn" aria-label="Abrir invitación">
+  <div class="ring-spark"></div>
+  <svg class="ring-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="ringMetal" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e9eef2"/><stop offset="60%" stop-color="#c9ccd0"/><stop offset="100%" stop-color="var(--rose-gold)"/></radialGradient>
+      <radialGradient id="blueGem" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#dff6ff"/><stop offset="60%" stop-color="#66c9ff"/><stop offset="100%" stop-color="#004c99"/></radialGradient>
+    </defs>
+    <g class="ring-rotate">
+      <ellipse cx="100" cy="100" rx="40" ry="12" stroke="url(#ringMetal)" stroke-width="12" fill="none" />
+      <path d="M100 58 L110 70 L100 86 L90 70 Z" fill="url(#blueGem)" stroke="#fff" stroke-opacity="0.4" stroke-width="0.6">
+        <animateTransform attributeName="transform" type="scale" values="1;1.03;1" dur="2.6s" repeatCount="indefinite"/>
+      </path>
+      <circle cx="100" cy="60" r="2" fill="#fff" opacity="0.9"><animate attributeName="r" values="2;4;2" dur="1.6s" repeatCount="indefinite"/></circle>
+    </g>
+  </svg>
+</button>
+<p class="verse">"Quien halla esposa halla el bien, y alcanza la benevolencia de Jehová."<br><strong>Proverbios 18:22</strong></p>
+<div class="countdown" id="countdown"></div>
+</div>
 </section>
 
-<!-- Padres -->
+<!-- ================= PADRES ================= -->
 <section class="section internal" data-name="padres">
-  <div class="overlay"></div>
-  <div class="card">
-    <div class="parents-grid">
-      <div class="col"><div class="parent-names parent-left">Eva Aguilar Rendón<br>Pedro Pérez Hernández</div></div>
-      <div class="col"><div class="parent-names parent-right">Saray Hernández Santana<br>Pablo Tinoco Carranza <span title="finanzas y familia">(🤍)</span></div></div>
-    </div>
-    <p class="honor">Tienen el honor de invitarte a la boda de sus hijos</p>
-  </div>
+<div class="overlay"></div>
+<div class="card couple">
+<h2 class="sub">Nuestros Padres</h2>
+<div class="parents-grid">
+  <div class="col parent-left"><p class="parent-names">Eva Aguilar Rendón & Pedro Pérez Hernández</p></div>
+  <div class="col parent-right"><p class="parent-names">Saray Hernández Santana & Pablo Tinoco Carranza †</p></div>
+</div>
+<p class="honor">Tienen el honor de compartir la dicha que enlaza a sus amados hijos.</p>
+</div>
 </section>
 
-<!-- Novios -->
+<!-- ================= NOVIOS ================= -->
 <section class="section internal" data-name="novios">
-  <div class="overlay"></div>
-  <div class="card couple">
-    <img class="photo" src="vestimenta_formal.jpg" alt="Abril y Pablo">
-    <h2 class="sub">Abril & Pablo</h2>
-    <div class="itinerary">
-      <div class="it-item"><div class="it-icon">💒</div><div>Boda: 25 de Abril 2026</div></div>
-      <div class="it-item"><div class="it-icon">🕑</div><div>Ceremonia: 18:00 hrs</div></div>
-      <div class="it-item"><div class="it-icon">🥂</div><div>Recepción: Hotel Paraíso</div></div>
-    </div>
-  </div>
+<div class="overlay"></div>
+<div class="card couple">
+<h2 class="sub">Abril & Pablo</h2>
+<img src="foto1.jpg" alt="Abril y Pablo" class="photo">
+</div>
 </section>
 
-<!-- Galería mejorada -->
-<section class="section gallery-section" data-name="galeria">
-  <div class="overlay"></div>
-  <div class="card" style="padding:16px;overflow:hidden">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <button class="magicBtn" id="prevSlide">&#8592;</button>
-      <h2 class="sub" style="margin:0">Galería de Abril & Pablo</h2>
-      <button class="magicBtn" id="nextSlide">&#8594;</button>
-    </div>
-    <div class="gallery-carousel" id="carousel">
-      <img src="galeria1.jpg" alt="Galería 1">
-      <img src="galeria2.jpg" alt="Galería 2">
-      <img src="galeria3.jpg" alt="Galería 3">
-      <img src="galeria4.jpg" alt="Galería 4">
-      <img src="galeria5.jpg" alt="Galería 5">
-      <img src="galeria6.jpg" alt="Galería 6">
-    </div>
-  </div>
+<!-- ================= ITINERARIO ================= -->
+<section class="section internal" data-name="itinerario">
+<div class="overlay"></div>
+<div class="card itinerary">
+<h2 class="sub">Itinerario</h2>
+<div class="it-item"><div class="it-icon">⛪</div><p>Ceremonia Religiosa: 14:00 hrs - Iglesia Cristiana Palabra de Vida AD <a href="https://maps.app.goo.gl/AWYkNZ44jyshjRUG6" target="_blank">Ver mapa</a></p></div>
+<div class="it-item"><div class="it-icon">🎉</div><p>Recepción: 16:00 hrs - Jardín El Abuelo, Tlaquiltenango, Morelos <a href="https://maps.app.goo.gl/QLWKyLr16BXANQM37" target="_blank">Ver mapa</a></p></div>
+</div>
 </section>
 
-<!-- Mensajes -->
-<section class="section wishes" data-name="wishes">
-  <div class="overlay"></div>
-  <div class="card">
-    <h2 class="sub">Deseos y Mensajes</h2>
-    <form action="https://script.google.com/macros/s/AKfycbxG72-raGQy1MSHhpCDU6_zEHfEJ6HLFeA2gIvWVrsyMpt3AgGREIdQlFDrn-ZJ8PzQ/exec" method="post" target="_blank">
-      <input type="text" name="name" placeholder="Tu nombre" required style="width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ccc">
-      <textarea name="message" placeholder="Tu mensaje" required style="width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ccc"></textarea>
-      <button type="submit" class="magicBtn">Enviar</button>
-    </form>
-  </div>
+<!-- ================= GALERÍA NOVIOS ================= -->
+<section class="section gallery" data-name="galeria">
+<div class="overlay"></div>
+<div class="card gallery-grid">
+<h2 class="sub">Mejores momentos de los novios</h2>
+<p class="verse">"Tu amor es lo que he anhelado y el regalo que Dios me ha dado"</p>
+<img src="momento1.jpg" alt="Momento 1">
+<img src="momento2.jpg" alt="Momento 2">
+<img src="momento3.jpg" alt="Momento 3">
+<img src="momento4.jpg" alt="Momento 4">
+<img src="momento5.jpg" alt="Momento 5">
+</div>
 </section>
 
-<!-- Sección final -->
+<!-- ================= DESEOS ================= -->
+<section class="section internal" data-name="deseos">
+<div class="overlay"></div>
+<div class="card couple">
+<h2 class="sub">Escribe tus deseos</h2>
+<textarea id="wishText" placeholder="Escribe un mensaje..." style="width:100%;height:100px;border-radius:10px;padding:10px;"></textarea>
+<button id="sendWish" class="magicBtn">Enviar</button>
+<button id="refreshWishes" class="magicBtn">Actualizar</button>
+<div id="wishesList" style="margin-top:12px;"></div>
+</div>
+</section>
+
+<!-- ================= CONFIRMACIÓN ================= -->
+<section class="section internal" data-name="rsvp">
+<div class="overlay"></div>
+<div class="card couple">
+<h2 class="sub">Confirmación de asistencia</h2>
+<form id="rsvpForm">
+<label>Nombre completo<br><input name="name" required style="width:100%"></label><br><br>
+<label>Correo (opcional)<br><input name="email" style="width:100%"></label><br><br>
+<label>Número de acompañantes<br><input name="guests" type="number" min="0" value="0" style="width:100%"></label><br><br>
+<div style="text-align:right">
+<button type="submit" class="magicBtn">Enviar</button>
+</div>
+</form>
+</div>
+</section>
+
+<!-- ================= VESTIMENTA ================= -->
+<section class="section internal" data-name="vestimenta">
+<div class="overlay"></div>
+<div class="card couple">
+<h2 class="sub">Código de vestimenta</h2>
+<img src="vestimenta_formal.png" alt="Vestimenta Formal" class="photo">
+<p class="verse">Tonos azul, celeste, gris, verde, beige, plateado o rosa.</p>
+</div>
+</section>
+
+<!-- ================= FINAL ================= -->
 <section class="section final" data-name="final">
-  <div class="overlay"></div>
-  <div class="card couple">
-    <h2 class="sub">Con amor eterno<br>Abril y Pablo</h2>
-    <img src="momento7.png" alt="Momento Especial" style="max-width:360px;border-radius:12px;margin-top:16px">
-    <div style="margin-top:14px;text-align:center;">
-      <button class="magicBtn" id="playEtern">▶️ Reproducir / Pausar canción</button>
-    </div>
-  </div>
+<div class="overlay"></div>
+<div class="card couple">
+<h2 class="sub">Con amor eterno Abril y Pablo</h2>
+<img src="momento7.jpg" alt="Momento especial" class="photo">
+<button class="audioBtn" id="audioBtn" aria-label="Reproducir/Pausar música">🎵</button>
+<div style="margin-top:12px;">
+<button id="shareBtn" class="magicBtn">Compartir Invitación</button>
+<button id="addCalendar" class="magicBtn">Agregar a Calendario</button>
+<button id="printBtn" class="magicBtn">Descargar PDF</button>
+</div>
+<p class="verse">¡Gracias por acompañarnos en este día tan especial!</p>
+<div style="margin-top:12px;">
+<button class="magicBtn" onclick="window.open('https://wa.me/5217774914500','_blank')">WhatsApp Abril</button>
+<button class="magicBtn" onclick="window.open('https://wa.me/5217341123645','_blank')">WhatsApp Pablo</button>
+</div>
+</div>
 </section>
 
 </div>
 
+<!-- ================= MODALES ================= -->
+<div class="modal" id="modalImg"><div class="box"><img id="modalImgContent"><button onclick="document.getElementById('modalImg').classList.remove('open')" class="magicBtn">Cerrar</button></div></div>
+
 <script>
-// Secciones
-const sections=document.querySelectorAll('.section');
-let current=0;
-function showSection(index){
-  sections.forEach((sec,i)=>{
+/* ================= NAVIGACIÓN ================= */
+const sections = document.querySelectorAll('.section');
+let currentIndex = 0;
+function showSection(i){
+  sections.forEach((sec, idx)=>{
     sec.classList.remove('active','prev','next');
-    if(i===index) sec.classList.add('active');
-    else if(i<index) sec.classList.add('prev');
+    if(idx===i) sec.classList.add('active');
+    else if(idx<i) sec.classList.add('prev');
     else sec.classList.add('next');
   });
+  currentIndex = i;
 }
-document.getElementById('ringBtn').addEventListener('click',()=>{showSection(1);});
+document.getElementById('ringBtn').addEventListener('click', ()=> showSection(1));
 
-// Carrusel galería
-const carousel=document.getElementById('carousel');
-const imgs=carousel.querySelectorAll('img');
-let currentIndex=0;
-function updateCarousel(){
-  imgs.forEach((img,i)=>{
-    const offset=i-currentIndex;
-    img.style.transform=`scale(${offset===0?1:0.75}) translateX(${offset*10}px) rotateY(${offset*10}deg)`;
-    img.style.opacity=offset===0?1:0.5;
+/* ================= CONTADOR ================= */
+const countdownEl = document.getElementById('countdown');
+const weddingDate = new Date('2025-12-28T14:00:00');
+function updateCountdown(){
+  const now = new Date();
+  const diff = weddingDate - now;
+  if(diff<0) return countdownEl.innerHTML='¡Ya es el día!';
+  const d=Math.floor(diff/1000/60/60/24);
+  const h=Math.floor((diff/1000/60/60)%24);
+  const m=Math.floor((diff/1000/60)%60);
+  const s=Math.floor((diff/1000)%60);
+  countdownEl.innerHTML=`
+    <div class="box"><div class="num">${d}</div><div class="label">Días</div></div>
+    <div class="box"><div class="num">${h}</div><div class="label">Horas</div></div>
+    <div class="box"><div class="num">${m}</div><div class="label">Min</div></div>
+    <div class="box"><div class="num">${s}</div><div class="label">Seg</div></div>
+  `;
+}
+setInterval(updateCountdown,1000);
+updateCountdown();
+
+/* ================= AUDIO ================= */
+const marcha = document.getElementById('marcha');
+const eternamente = document.getElementById('eternamente');
+const audioBtn = document.getElementById('audioBtn');
+audioBtn.addEventListener('click', ()=>{
+  if(eternamente.paused){eternamente.play();marcha.pause();}
+  else{eternamente.pause();marcha.play();}
+});
+
+/* ================= MODAL GALERÍA ================= */
+document.querySelectorAll('.gallery-grid img').forEach(img=>{
+  img.addEventListener('click', ()=> {
+    const modal = document.getElementById('modalImg');
+    const modalImg = document.getElementById('modalImgContent');
+    modalImg.src = img.src;
+    modal.classList.add('open');
   });
+});
+
+/* ================= DESEOS ================= */
+const WISHES_ENDPOINT='https://script.google.com/macros/s/AKfycbwY2G6aHz1-W9Sk3CUspgJYNf2EhEchr_gNk4mvaZS4wXn7sKIfIV3Qy-Wje2UCKdgC/exec';
+const RSVP_ENDPOINT='https://script.google.com/macros/s/AKfycbyDEgVJzj-vGvwxFE1eqTmKb4pO4__lXB9gX8gMKGc2yGhlzR15AFPY8vQMvnjoNs01Vg/exec';
+
+const wishText = document.getElementById('wishText');
+const sendWishBtn = document.getElementById('sendWish');
+const wishesList = document.getElementById('wishesList');
+const refreshWishesBtn = document.getElementById('refreshWishes');
+
+async function loadWishes(){
+  try{
+    const res = await fetch(`${WISHES_ENDPOINT}?action=list`);
+    const data = await res.json();
+    wishesList.innerHTML='';
+    data.forEach(w=>{
+      const p=document.createElement('p');p.textContent=w.message;wishesList.appendChild(p);
+    });
+  }catch(e){console.warn(e);}
 }
-updateCarousel();
-document.getElementById('prevSlide').addEventListener('click',()=>{currentIndex=(currentIndex-1+imgs.length)%imgs.length;updateCarousel();});
-document.getElementById('nextSlide').addEventListener('click',()=>{currentIndex=(currentIndex+1)%imgs.length;updateCarousel();});
-let startX=null;
-carousel.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;});
-carousel.addEventListener('touchend',e=>{if(startX===null) return; let endX=e.changedTouches[0].clientX; let diff=endX-startX; if(diff>40){currentIndex=(currentIndex-1+imgs.length)%imgs.length;updateCarousel();} else if(diff<-40){currentIndex=(currentIndex+1)%imgs.length;updateCarousel();} startX=null;});
+loadWishes();
 
-// Botones audio
-const etern=document.getElementById('eternamente');
-document.getElementById('toggleEtern').addEventListener('click',()=>{etern.paused?etern.play():etern.pause();});
-document.getElementById('playEtern').addEventListener('click',()=>{etern.paused?etern.play():etern.pause();});
-const marcha=document.getElementById('marcha');
-document.getElementById('pauseMarchBtn').addEventListener('click',()=>{marcha.paused?marcha.play():marcha.pause();});
+sendWishBtn.addEventListener('click', async ()=>{
+  const msg=wishText.value.trim();
+  if(!msg) return alert('Escribe un mensaje antes de enviar');
+  try{
+    await fetch(`${WISHES_ENDPOINT}?action=add&message=${encodeURIComponent(msg)}`);
+    wishText.value='';loadWishes();
+  }catch(e){console.warn(e);}
+});
+refreshWishesBtn.addEventListener('click',loadWishes);
 
-// Corazones clic
-document.getElementById('clickRingBtn').addEventListener('click',()=>{
-  const heart=document.createElement('div');heart.classList.add('magicHeart');heart.textContent='❤️';document.body.appendChild(heart);
-  heart.style.left=(window.innerWidth/2)+'px';heart.style.top=(window.innerHeight/2)+'px';
+/* ================= RSVP ================= */
+const rsvpForm=document.getElementById('rsvpForm');
+rsvpForm.addEventListener('submit',async(e)=>{
+  e.preventDefault();
+  const data={name:rsvpForm.name.value,email:rsvpForm.email.value,guests:rsvpForm.guests.value};
+  try{
+    await fetch(`${RSVP_ENDPOINT}?action=add&name=${encodeURIComponent(data.name)}&email=${encodeURIComponent(data.email)}&guests=${encodeURIComponent(data.guests)}`);
+    alert('¡Gracias! Confirmación enviada');rsvpForm.reset();
+  }catch(e){console.warn(e);}
+});
+
+/* ================= COMPARTIR & CALENDARIO ================= */
+document.getElementById('shareBtn').addEventListener('click', ()=>{
+  if(navigator.share){navigator.share({title:'Invitación Abril & Pablo',text:'¡Te invitamos a nuestra boda!',url:location.href});}
+  else{alert('Tu navegador no soporta compartir automáticamente');}
+});
+document.getElementById('addCalendar').addEventListener('click', ()=>{
+  const start=weddingDate.toISOString().replace(/-|:|\.\d+/g,"");
+  const endDate=new Date(weddingDate.getTime()+7*60*60*1000);
+  const end=endDate.toISOString().replace(/-|:|\.\d+/g,"");
+  const url=`https://www.google.com/calendar/render?action=TEMPLATE&text=Abril+%26+Pablo+Boda&dates=${start}/${end}&details=Celebración+de+nuestra+boda&location=Iglesia+Cristiana+Palabra+de+Vida+AD,+Tlaquiltenango,+Morelos`;
+  window.open(url,'_blank');
+});
+
+/* ================= IMPRESIÓN ================= */
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
+
+/* ================= CURSOR MÁGICO ================= */
+const colors=['#66c9ff','#fff','#b8e6c4','#c0c0c0'];
+document.addEventListener('mousemove',e=>{
+  const heart=document.createElement('div');
+  heart.className='magicHeart';
+  heart.style.background=colors[Math.floor(Math.random()*colors.length)];
+  heart.style.left=e.clientX+'px';heart.style.top=e.clientY+'px';
+  document.body.appendChild(heart);
   setTimeout(()=>heart.remove(),1000);
 });
 </script>
+
 </body>
 </html>
+ 
