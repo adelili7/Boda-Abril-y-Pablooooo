@@ -6,197 +6,252 @@
   <title>Abril & Pablo — Invitación</title>
 
   <!-- Fuentes -->
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Alex+Brush&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Parisienne&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Alex+Brush&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
     :root{
       --bg-cream:#F8F5F0;
       --accent:#B8DDE6;
       --deep:#2B2A2F;
-      --card-bg: rgba(255,255,255,0.85);
+      --card-bg: rgba(255,255,255,0.88);
       --rose-gold:#d6a79b;
       --blue:#66c9ff;
       --silver:#c8c8c8;
       --green:#a7ffcf;
       --white:#ffffff;
+      --count-bg: rgba(255,255,255,0.96);
     }
 
-    html,body{height:100%;margin:0;font-family:Quicksand,system-ui,Arial;background:var(--bg-cream);color:var(--deep);-webkit-font-smoothing:antialiased}
-    main{position:relative}
+    /* Reset + base */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:'Quicksand',system-ui,Arial, sans-serif;background:var(--bg-cream);color:var(--deep);-webkit-font-smoothing:antialiased}
+    a{color:inherit}
 
-    /* sections container */
+    /* Sections container (stacked, portrait layout) */
     .sections{position:relative;height:100vh;overflow:hidden;perspective:1200px}
 
-    /* basic section layout + flipbook-like 3d transition */
+    /* Each page */
     .section{
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:40px 20px;
-      box-sizing:border-box;
-      position:absolute;
-      inset:0;
-      opacity:0;
+      position:absolute;inset:0;
+      display:flex;align-items:center;justify-content:center;
+      padding:36px 20px;
+      transition:transform .85s cubic-bezier(.2,.9,.2,1),opacity .6s ease;
       transform-origin:center;
-      transition:transform .9s cubic-bezier(.2,.9,.2,1),opacity .6s ease;
       backface-visibility:hidden;
-      background-size:cover;
-      background-position:center center;
-      background-repeat:no-repeat;
-      /* smooth parallax origin */
-      will-change:background-position, transform;
+      opacity:0;pointer-events:none;
+      background-size:cover;background-position:center center;background-repeat:no-repeat;
+      /* Parallax effect: background-attachment fixed works well on desktop; added JS for mobile */
+      background-attachment: fixed;
     }
-    .section.active{opacity:1;transform:rotateY(0) translateZ(0);z-index:2}
+    .section.active{opacity:1;pointer-events:auto;transform:rotateY(0) translateZ(0);z-index:2}
     .section.prev{opacity:0;transform:rotateY(-90deg) translateZ(-200px)}
     .section.next{opacity:0;transform:rotateY(90deg) translateZ(-200px)}
 
-    /* backgrounds (per user) */
+    /* Background images per page (file names requested) */
     .portada{background-image:url('fondo_floral.jpg')}
     .page2{background-image:url('fondo_floral1.png')}
     .page3{background-image:url('fondo_floral2.jpg')}
     .page4{background-image:url('fondo_floral3.jpg')}
     .page5{background-image:url('fondo_floral4.png')}
 
-    /* overlay and card */
-    .overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.6));pointer-events:none}
+    /* translucent card */
     .card{position:relative;z-index:2;max-width:980px;width:100%;background:var(--card-bg);backdrop-filter: blur(6px);border-radius:18px;padding:28px;box-shadow:0 10px 35px rgba(0,0,0,0.12)}
 
-    .headline{font-family:'Parisienne',cursive;font-size:64px;text-align:center;margin:0 0 8px;color:#2f2f2f}
-    .sub{font-family:'Alex Brush',cursive;font-size:42px;text-align:center;color:#3d3d3d;margin:0 0 12px}
+    /* Headings / fonts */
+    .headline{font-family:'Parisienne',cursive;font-size:56px;text-align:center;margin:0 0 6px;color:var(--deep)}
+    .sub{font-family:'Alex Brush',cursive;font-size:34px;text-align:center;color:var(--deep);margin:0 0 10px}
+    .romantic{font-family:'Parisienne',cursive}
 
-    /* ring / svg */
-    .ring-button{display:block;margin:14px auto;padding:0;border:0;background:transparent;cursor:pointer;outline:none;position:relative}
-    .ring-svg{width:240px;height:240px;display:block}
-    .ring-rotate{animation:ringSpin 14s linear infinite;transform-origin:100px 100px}
+    /* Buttons */
+    .controls{display:flex;gap:10px;justify-content:center;margin-top:12px}
+    .magicBtn{padding:8px 12px;border-radius:12px;background:linear-gradient(45deg,var(--accent),#f8f5f0);color:var(--deep);font-weight:600;border:0;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.12)}
+    .ring-button{display:inline-block;padding:0;border:0;background:transparent;cursor:pointer;outline:none;position:relative}
+    .ring-svg{width:180px;height:180px;display:block}
+    .ring-rotate{animation:ringSpin 14s linear infinite;transform-origin:90px 90px}
     @keyframes ringSpin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
-    .ring-button:hover{transform:scale(1.03)}
-    .ring-spark{position:absolute;left:50%;top:35%;width:140px;height:140px;transform:translate(-50%,-50%);pointer-events:none;border-radius:50%;opacity:0}
+
+    /* spark */
+    .ring-spark{position:absolute;left:50%;top:38%;width:120px;height:120px;transform:translate(-50%,-50%);pointer-events:none;border-radius:50%;opacity:0}
     .ring-button.clicked .ring-spark{animation:spark 900ms ease-out forwards}
     @keyframes spark{0%{opacity:0;transform:translate(-50%,-50%) scale(0.6);}30%{opacity:1;transform:translate(-50%,-50%) scale(1.05);}100%{opacity:0;transform:translate(-50%,-50%) scale(1.6);}}
 
-    .verse{font-style:italic;text-align:center;margin-top:12px;color:#3d3d3d;font-family:'Playfair Display',serif;font-size:20px}
-    .countdown{display:flex;gap:10px;justify-content:center;margin-top:12px}
-    .countdown .box{min-width:64px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.95);text-align:center}
-    .countdown .num{font-family:'Playfair Display';font-size:18px}
+    /* verse text */
+    .verse{font-style:italic;text-align:center;margin-top:12px;color:#3d3d3d;font-family:'Playfair Display',serif;font-size:18px}
+
+    /* Countdown (large & magical) */
+    .countdown{display:flex;gap:12px;justify-content:center;margin-top:14px}
+    .countdown .box{min-width:84px;padding:14px;border-radius:14px;background:var(--count-bg);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.12);border:1px solid rgba(255,255,255,0.6)}
+    .countdown .num{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--deep)}
     .countdown .label{font-size:11px;color:#666}
+    /* extra glow for prominence */
+    .count-glow{box-shadow:0 12px 34px rgba(102,201,255,0.18),0 6px 18px rgba(167,255,207,0.06) inset}
 
-    .magicBtn{padding:6px 10px;margin:6px 4px;border-radius:12px;background:linear-gradient(45deg,var(--accent),#f8f5f0);color:var(--deep);font-family:'Quicksand',sans-serif;font-weight:600;font-size:13px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.12)}
-
+    /* parents grid */
     .parents-grid{display:flex;justify-content:space-between;gap:16px;align-items:center}
     .parents-grid .col{flex:1;min-width:220px}
     .parent-names{font-family:'Alex Brush',cursive;font-size:26px;color:var(--deep);line-height:1.2}
-    .parent-left{text-align:left}
-    .parent-right{text-align:right}
-    .honor{font-family:'Playfair Display',serif;font-size:22px;text-align:center;margin-top:22px}
+    .parent-left{text-align:right}
+    .parent-right{text-align:left}
+    .honor{font-family:'Parisienne',cursive;font-size:24px;text-align:center;margin-top:18px;color:var(--deep)}
 
-    .couple{display:flex;flex-direction:column;align-items:center;gap:12px}
-    .photo{max-width:420px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.12)}
+    /* couple photo */
+    .couple{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:18px}
+    .photo{width:100%;max-width:520px;border-radius:16px;box-shadow:0 14px 40px rgba(0,0,0,0.14);display:block;object-fit:cover;border:6px solid rgba(255,255,255,0.6)}
+    /* photo glow */
+    .photo-wrap{position:relative;display:inline-block;border-radius:20px}
+    .photo-glow{position:absolute;inset:0;border-radius:16px;pointer-events:none;box-shadow:0 0 40px rgba(102,201,255,0.18);opacity:0.95;mix-blend-mode:screen;transition:opacity .6s}
 
+    /* itinerary */
     .itinerary{display:flex;flex-direction:column;gap:12px;font-size:16px}
     .it-item{display:flex;gap:12px;align-items:center}
     .it-icon{width:48px;height:48px;border-radius:10px;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center}
 
-    .gallery-grid{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+    /* gallery grid */
+    .gallery-grid{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
     .gallery-grid img{width:160px;height:110px;object-fit:cover;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.12)}
 
+    /* RSVP modal */
     .modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:9999}
     .modal.open{display:flex}
     .modal .box{background:white;padding:20px;border-radius:10px;max-width:520px;width:100%}
 
-    /* cursor hearts handled by JS */
+    /* nav arrows (bottom) */
+    .nav-buttons{position:fixed;bottom:18px;left:0;right:0;display:flex;justify-content:space-between;padding:0 22px;z-index:9998;pointer-events:none}
+    .nav-buttons button{pointer-events:auto;background:rgba(255,255,255,0.9);border:2px solid var(--rose-gold);color:var(--deep);border-radius:50%;width:54px;height:54px;font-size:20px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,0.12)}
+    .nav-buttons button:hover{transform:scale(1.04)}
+
+    /* hearts */
     .magicHeart{position:fixed;pointer-events:none;z-index:99999;width:26px;height:26px;opacity:0;transform:translate(-50%,-50%) scale(1);animation:heartFade 1000ms forwards}
     @keyframes heartFade{0%{opacity:1;transform:translate(-50%,-50%) scale(1);}100%{opacity:0;transform:translate(-50%,-120%) scale(0.6)}}
 
-    .small{font-size:13px}
-    @media (max-width:900px){.headline{font-size:48px}.sub{font-size:30px}}
+    /* responsive vertical-friendly styling */
+    @media (max-width:900px){
+      .headline{font-size:44px}
+      .sub{font-size:28px}
+      .parent-names{font-size:22px}
+      .card{padding:18px;border-radius:14px}
+      .photo{max-width:360px;border-radius:14px}
+      .countdown .box{min-width:60px;padding:10px}
+      .nav-buttons{bottom:12px}
+      .ring-svg{width:140px;height:140px}
+    }
   </style>
 </head>
 <body>
-  <!-- Audios: mantener autoplay del original -->
+
+  <!-- Audios (kept as requested; note some browsers block autoplay until interaction) -->
   <audio id="marcha" src="marcha_nupcial.mp3" preload="auto" loop autoplay></audio>
   <audio id="eternamente" src="eternamente.mp3" preload="auto"></audio>
 
   <div class="sections">
     <!-- Page 1: Portada -->
-    <section class="section portada active" data-name="portada" data-bg="fondo_floral.jpg">
+    <section class="section portada active" data-name="portada">
       <div class="overlay"></div>
-      <div class="card">
+      <div class="card" role="region" aria-label="Portada">
         <h1 class="headline">Abril & Pablo</h1>
         <h2 class="sub">¡Sí, acepto!</h2>
 
-        <button class="ring-button" id="ringBtn" aria-label="Abrir invitación">
-          <div class="ring-spark"></div>
-          <svg class="ring-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <radialGradient id="ringMetal" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e9eef2"/><stop offset="60%" stop-color="#c9ccd0"/><stop offset="100%" stop-color="var(--rose-gold)"/></radialGradient>
-              <radialGradient id="blueGem" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#dff6ff"/><stop offset="60%" stop-color="#66c9ff"/><stop offset="100%" stop-color="#004c99"/></radialGradient>
-            </defs>
-            <g class="ring-rotate">
-              <ellipse cx="100" cy="100" rx="40" ry="12" stroke="url(#ringMetal)" stroke-width="12" fill="none" />
-              <path d="M100 58 L110 70 L100 86 L90 70 Z" fill="url(#blueGem)" stroke="#fff" stroke-opacity="0.4" stroke-width="0.6">
-                <animateTransform attributeName="transform" type="scale" values="1;1.03;1" dur="2.6s" repeatCount="indefinite"/>
-              </path>
-              <circle cx="100" cy="60" r="2" fill="#fff" opacity="0.9"><animate attributeName="r" values="2;4;2" dur="1.6s" repeatCount="indefinite"/></circle>
-            </g>
-          </svg>
-        </button>
+        <div style="text-align:center;margin-top:6px;">
+          <button class="ring-button" id="ringBtn" aria-label="Abrir invitación">
+            <div class="ring-spark"></div>
+            <svg class="ring-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <radialGradient id="ringMetal" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e9eef2"/><stop offset="60%" stop-color="#c9ccd0"/><stop offset="100%" stop-color="var(--rose-gold)"/></radialGradient>
+                <radialGradient id="blueGem" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#dff6ff"/><stop offset="60%" stop-color="#66c9ff"/><stop offset="100%" stop-color="#004c99"/></radialGradient>
+              </defs>
+              <g class="ring-rotate">
+                <ellipse cx="100" cy="100" rx="40" ry="12" stroke="url(#ringMetal)" stroke-width="12" fill="none" />
+                <path d="M100 58 L110 70 L100 86 L90 70 Z" fill="url(#blueGem)" stroke="#fff" stroke-opacity="0.4" stroke-width="0.6">
+                  <animateTransform attributeName="transform" type="scale" values="1;1.03;1" dur="2.6s" repeatCount="indefinite"/>
+                </path>
+                <circle cx="100" cy="60" r="2" fill="#fff" opacity="0.9"><animate attributeName="r" values="2;4;2" dur="1.6s" repeatCount="indefinite"/></circle>
+              </g>
+            </svg>
+          </button>
+        </div>
 
-        <div style="text-align:center;margin-top:8px;">
+        <div style="text-align:center;margin-top:10px;">
           <button class="magicBtn" id="clickRingBtn">Clic en el anillo</button>
           <button class="magicBtn" id="pauseMarchBtn">Pausar marcha</button>
           <button class="magicBtn" id="toggleEtern">Reproducir eternamente</button>
         </div>
 
         <p class="verse">"Quien halla esposa halla el bien"<br><strong>Proverbios 18:22</strong></p>
-        <div class="countdown" id="countdown"></div>
+
+        <div class="countdown count-glow" id="countdown">
+          <div class="box"><div class="num" id="p1d">0</div><div class="label">Días</div></div>
+          <div class="box"><div class="num" id="p1h">0</div><div class="label">Horas</div></div>
+          <div class="box"><div class="num" id="p1m">0</div><div class="label">Minutos</div></div>
+          <div class="box"><div class="num" id="p1s">0</div><div class="label">Segundos</div></div>
+        </div>
       </div>
     </section>
 
-    <!-- Page 2: Padres + foto -->
-    <section class="section page2" id="parentsSection" data-name="padres" data-bg="fondo_floral1.png">
+    <!-- Page 2: Padres + frase + fecha + contador + novios -->
+    <section class="section page2" data-name="padres">
       <div class="overlay"></div>
-      <div class="card">
-        <div class="parents-grid">
-          <div class="col"><div class="parent-names parent-left">Eva Aguilar Rendón<br>Pedro Pérez Hernández</div></div>
-          <div class="col"><div class="parent-names parent-right">Saray Hernández Santana<br>Pablo Tinoco Carranza <span title="finado">✝</span></div></div>
+      <div class="card" role="region" aria-label="Padres y novios">
+        <div class="parents-grid" aria-hidden="false">
+          <div class="col parent-left">
+            <div class="parent-names">Padres de la novia:<br><strong>Eva Aguilar Rendón</strong><br><strong>Pedro Pérez Hernández</strong></div>
+          </div>
+          <div class="col parent-right">
+            <div class="parent-names">Padres del novio:<br><strong>Saray Hernández Santana</strong><br><strong>Pablo Tinoco Carranza</strong> <span title="finado">✝</span></div>
+          </div>
         </div>
-        <div class="honor">Tienen el honor de compartir la dicha que enlaza a sus amados hijos.</div>
-        <div style="text-align:center;margin-top:16px"><img src="foto1.jpg" alt="Abril y Pablo" class="photo"></div>
+
+        <div class="honor romantic">“Tienen el honor de compartir la dicha que enlaza a sus amados hijos.”</div>
+
+        <div style="text-align:center;margin-top:16px;">
+          <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--blue);">Evento: <strong>28 de diciembre de 2025</strong></div>
+          <div class="countdown count-glow" id="countdownPadres" style="margin-top:10px;">
+            <div class="box"><div class="num" id="days">0</div><div class="label">Días</div></div>
+            <div class="box"><div class="num" id="hours">0</div><div class="label">Horas</div></div>
+            <div class="box"><div class="num" id="minutes">0</div><div class="label">Minutos</div></div>
+            <div class="box"><div class="num" id="seconds">0</div><div class="label">Segundos</div></div>
+          </div>
+        </div>
+
+        <div class="couple" style="margin-top:18px;">
+          <h2 class="sub">Abril & Pablo</h2>
+          <div class="photo-wrap">
+            <img src="foto1.jpg" alt="Abril y Pablo" class="photo" />
+            <div class="photo-glow" aria-hidden="true"></div>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- Page 3: Itinerario + RSVP -->
-    <section class="section page3" id="itinerarySection" data-name="itinerario" data-bg="fondo_floral2.jpg">
+    <section class="section page3" data-name="itinerario">
       <div class="overlay"></div>
-      <div class="card">
+      <div class="card" role="region" aria-label="Itinerario y RSVP">
         <h2 class="sub">Itinerario</h2>
-        <div class="itinerary">
+
+        <div class="itinerary" style="margin-top:12px;">
           <div class="it-item"><div class="it-icon">⛪</div><div><strong>Ceremonia Religiosa:</strong> 2:00 pm — Iglesia Cristiana Palabra de Vida AD <br><a class="small" href="https://maps.app.goo.gl/AWYkNZ44jyshjRUG6" target="_blank">Ver mapa</a></div></div>
           <div class="it-item"><div class="it-icon">🎉</div><div><strong>Recepción:</strong> 4:00 pm — Jardín El Abuelo, Tlaquiltenango, Morelos <br><a class="small" href="https://maps.app.goo.gl/QLWKyLr16BXANQM37" target="_blank">Ver mapa</a></div></div>
           <div class="it-item"><div class="it-icon">⏳</div><div><strong>Duración estimada:</strong> Inicio 4:00 pm — Se estima evento hasta las 11:00 pm aprox.</div></div>
-          <div class="it-item"><div class="it-icon">👗</div><div><strong>Código de vestimenta:</strong> Formal — tonos recomendados: celestes, beige, gris, verde, rosa.<br> <em>Dejemos el blanco para la novia.</em>
-            <div style="margin-top:8px"><img src="vestimenta_formal.png" alt="Vestimenta" style="max-width:160px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.12)"></div>
-          </div></div>
+          <div class="it-item"><div class="it-icon">👗</div><div><strong>Código de vestimenta:</strong> Formal — tonos recomendados: celestes, beige, gris, verde, rosa.<br><em>Dejemos el blanco para la novia.</em></div></div>
         </div>
 
-        <div style="text-align:center;margin-top:16px">
+        <div style="text-align:center;margin-top:14px;">
           <button class="magicBtn" id="openRsvp">Confirmar asistencia</button>
         </div>
       </div>
     </section>
 
-    <!-- Page 4: Galería + Buenos deseos -->
-    <section class="section page4" id="gallerySection" data-name="galeria" data-bg="fondo_floral3.jpg">
+    <!-- Page 4: Galería de novios + Buenos deseos -->
+    <section class="section page4" data-name="galeria">
       <div class="overlay"></div>
-      <div class="card">
+      <div class="card" role="region" aria-label="Galería y buenos deseos">
         <h2 class="sub">Galería — Los novios</h2>
-        <div class="gallery-grid" id="galleryGrid">
-          <img src="momento1.jpg" alt>
-          <img src="momento2.jpg" alt>
-          <img src="momento3.jpg" alt>
-          <img src="momento4.jpg" alt>
-          <img src="momento5.jpg" alt>
+        <div class="gallery-grid" id="galleryGrid" aria-live="polite" style="margin-top:12px;">
+          <img src="momento1.jpg" alt="Momento 1">
+          <img src="momento2.jpg" alt="Momento 2">
+          <img src="momento3.jpg" alt="Momento 3">
+          <img src="momento4.jpg" alt="Momento 4">
+          <img src="momento5.jpg" alt="Momento 5">
         </div>
 
         <div style="text-align:center;margin-top:12px;">
@@ -207,33 +262,33 @@
         <hr style="margin:18px 0;border:none;border-top:1px solid rgba(0,0,0,0.06)">
 
         <h2 class="sub">Buenos deseos</h2>
-        <div style="text-align:center;margin-bottom:12px">
-          <textarea id="wishText" placeholder="Escribe tu mensaje para los novios" style="width:100%;min-height:90px;padding:12px;border-radius:10px;border:1px solid #ddd"></textarea>
-        </div>
+        <div style="text-align:center;margin-bottom:12px"><textarea id="wishText" placeholder="Escribe tu mensaje para los novios" style="width:100%;min-height:90px;padding:12px;border-radius:10px;border:1px solid #ddd"></textarea></div>
         <div style="text-align:center"><button class="magicBtn" id="sendWish">Enviar deseo</button></div>
         <h3 style="margin-top:18px">Mensajes públicos</h3>
         <div id="wishesList" style="max-height:260px;overflow:auto;padding:8px;border-radius:8px;background:rgba(255,255,255,0.9)"></div>
       </div>
     </section>
 
-    <!-- Page 5: Galería colaborativa + Final/WhatsApp -->
-    <section class="section page5 final" id="finalSection" data-name="final" data-bg="fondo_floral4.png">
+    <!-- Page 5: Galería colaborativa + Final / WhatsApp -->
+    <section class="section page5" data-name="final">
       <div class="overlay"></div>
-      <div class="card">
+      <div class="card" role="region" aria-label="Galería colaborativa y contactos">
         <h2 class="sub">Momentos de los invitados</h2>
-        <div class="gallery-grid" id="collabGrid">
-          <img src="momento6.jpg" alt>
+        <div class="gallery-grid" id="collabGrid" style="margin-top:12px;">
+          <img src="momento6.jpg" alt="Momento invitado">
         </div>
         <p style="text-align:center;margin-top:12px">Contribuye con tus fotos/videos: <a href="https://docs.google.com/forms/d/e/1FAIpQLSfDX9Ky8YrQ962Uxh5ibEYGDk2WsyyVUxUPC09IcwrBKlHx7A/viewform?usp=header" target="_blank">Subir momento</a></p>
 
         <hr style="margin:18px 0;border:none;border-top:1px solid rgba(0,0,0,0.06)">
 
         <h2 class="sub">Con amor eterno Abril y Pablo</h2>
-        <p style="text-align:center;font-family:'Playfair Display',serif;font-size:18px;margin-top:8px;">Gracias por acompañarnos en este día tan especial.</p>
+        <p style="text-align:center;font-family:'Playfair Display',serif;font-size:18px;margin-top:8px;color:var(--deep);">Gracias por acompañarnos en este día tan especial.</p>
+
         <div style="text-align:center;margin-top:12px;">
           <a class="magicBtn" href="#" id="addCalendar">Agregar al calendario</a>
           <button class="magicBtn" id="downloadPdf">Descargar invitación (PDF)</button>
         </div>
+
         <div style="text-align:center;margin-top:12px;">
           <a class="magicBtn" href="https://wa.me/5217774914500" target="_blank">WhatsApp Abril</a>
           <a class="magicBtn" href="https://wa.me/5217341123645" target="_blank">WhatsApp Pablo</a>
@@ -242,9 +297,9 @@
     </section>
   </div>
 
-  <!-- RSVP modal box (embedded form) -->
+  <!-- RSVP modal box -->
   <div class="modal" id="rsvpModal" aria-hidden="true">
-    <div class="box">
+    <div class="box" role="dialog" aria-modal="true" aria-label="Confirmación de asistencia">
       <h3>Confirmación de asistencia</h3>
       <form id="rsvpForm">
         <label>Nombre completo<br><input name="name" required style="width:100%"></label><br><br>
@@ -255,89 +310,116 @@
     </div>
   </div>
 
+  <!-- Navigation arrows -->
+  <div class="nav-buttons" aria-hidden="false">
+    <button id="prevBtn" aria-label="Página anterior">‹</button>
+    <button id="nextBtn" aria-label="Página siguiente">›</button>
+  </div>
+
   <script>
     /* -------------------------
-       NAVIGATION BETWEEN SECTIONS
+       Basic section navigation
        ------------------------- */
     const sections = Array.from(document.querySelectorAll('.section'));
-    function showSectionByName(name){
-      sections.forEach(s=>{ s.classList.remove('active','prev','next') });
-      const idx = sections.findIndex(s=>s.dataset.name===name);
-      if(idx===-1) return;
-      sections.forEach((s,i)=>{ if(i<idx) s.classList.add('prev'); if(i>idx) s.classList.add('next'); });
+    let currentIndex = sections.findIndex(s=>s.classList.contains('active'));
+    if(currentIndex === -1) currentIndex = 0;
+
+    function showSectionByIndex(idx){
+      if(idx < 0) idx = sections.length - 1;
+      if(idx >= sections.length) idx = 0;
+      sections.forEach((s,i)=>{
+        s.classList.remove('active','prev','next');
+        if(i < idx) s.classList.add('prev');
+        else if(i > idx) s.classList.add('next');
+      });
       sections[idx].classList.add('active');
       currentIndex = idx;
-      // ensure parallax initial position is centered for the new active section
+      // reset parallax background position of active section (center)
       setBackgroundPositionCentered(sections[idx]);
     }
 
-    // initial
-    let currentIndex = 0;
-    showSectionByName('portada');
+    document.getElementById('prevBtn').addEventListener('click', ()=> showSectionByIndex((currentIndex-1+sections.length)%sections.length));
+    document.getElementById('nextBtn').addEventListener('click', ()=> showSectionByIndex((currentIndex+1)%sections.length));
 
-    /* -------------------------
-       AUDIO + RING BEHAVIOR
-       ------------------------- */
+    // arrow keys
+    window.addEventListener('keydown', (e)=>{
+      if(e.key === 'ArrowRight') showSectionByIndex((currentIndex+1)%sections.length);
+      if(e.key === 'ArrowLeft') showSectionByIndex((currentIndex-1+sections.length)%sections.length);
+    });
+
+    // ring / open parents
     const ringBtn = document.getElementById('ringBtn');
+    const clickRingBtn = document.getElementById('clickRingBtn');
     const marcha = document.getElementById('marcha');
     const eternamente = document.getElementById('eternamente');
-    const clickRingBtn = document.getElementById('clickRingBtn');
-    const pauseMarchBtn = document.getElementById('pauseMarchBtn');
-    const toggleEtern = document.getElementById('toggleEtern');
+    ringBtn?.addEventListener('click', openParents);
+    clickRingBtn?.addEventListener('click', openParents);
 
     function openParents(){
-      try{ marcha.pause(); }catch(e){}
-      try{ eternamente.currentTime=0; eternamente.play(); }catch(e){}
-      // spark visual
-      ringBtn.classList.add('clicked'); setTimeout(()=>ringBtn.classList.remove('clicked'),900);
-      showSectionByName('padres');
-      document.getElementById('parentsSection').scrollIntoView({behavior:'smooth'});
+      try { marcha.pause(); } catch(e){}
+      try { eternamente.currentTime = 0; eternamente.play(); } catch(e){}
+      ringBtn?.classList.add('clicked'); setTimeout(()=>ringBtn?.classList.remove('clicked'),900);
+      const idx = sections.findIndex(s=>s.dataset.name==='padres'); if(idx !== -1) showSectionByIndex(idx);
     }
-    ringBtn.addEventListener('click',openParents);
-    clickRingBtn.addEventListener('click',openParents);
-    pauseMarchBtn.addEventListener('click',()=>marcha.pause());
 
+    // pause/play controls for audios
+    document.getElementById('pauseMarchBtn').addEventListener('click', ()=> {
+      if(marcha.paused) marcha.play().catch(()=>{}); else marcha.pause();
+    });
+    const toggleEtern = document.getElementById('toggleEtern');
     function updateToggleEtern(){ toggleEtern.textContent = eternamente.paused ? 'Reproducir eternamente' : 'Pausar eternamente'; }
-    toggleEtern.addEventListener('click', ()=>{ if(eternamente.paused){ eternamente.play(); } else { eternamente.pause(); } updateToggleEtern(); });
+    toggleEtern.addEventListener('click', ()=>{ if(eternamente.paused) eternamente.play().catch(()=>{}); else eternamente.pause(); updateToggleEtern(); });
     eternamente.addEventListener('play', updateToggleEtern);
     eternamente.addEventListener('pause', updateToggleEtern);
 
     /* -------------------------
-       COUNTDOWN to 28 Dec 2025
+       Countdown (shared) - target 28 Dec 2025
        ------------------------- */
-    const countdownEl = document.getElementById('countdown');
     const target = new Date('2025-12-28T00:00:00');
+
     function tick(){
       const now = new Date();
       let diff = target - now;
-      if(diff<=0){countdownEl.innerHTML='<div class="box"><div class="num">0</div><div class="label">Días</div></div>';return}
-      const d = Math.floor(diff/1000/60/60/24); diff-=d*24*60*60*1000;
-      const h = Math.floor(diff/1000/60/60); diff-=h*60*60*1000;
-      const m = Math.floor(diff/1000/60); diff-=m*60*1000;
+      if(diff <= 0){
+        // set zeros or celebration
+        document.querySelectorAll('.countdown .num').forEach(n => n.textContent = 0);
+        return;
+      }
+      const d = Math.floor(diff/1000/60/60/24);
+      diff -= d*24*60*60*1000;
+      const h = Math.floor(diff/1000/60/60);
+      diff -= h*60*60*1000;
+      const m = Math.floor(diff/1000/60);
+      diff -= m*60*1000;
       const s = Math.floor(diff/1000);
-      countdownEl.innerHTML = `
-        <div class="box"><div class="num">${d}</div><div class="label">Días</div></div>
-        <div class="box"><div class="num">${h}</div><div class="label">Horas</div></div>
-        <div class="box"><div class="num">${m}</div><div class="label">Minutos</div></div>
-        <div class="box"><div class="num">${s}</div><div class="label">Segundos</div></div>`;
+      // update each block (we have two countdown instances)
+      document.getElementById('p1d') && (document.getElementById('p1d').textContent = d);
+      document.getElementById('p1h') && (document.getElementById('p1h').textContent = h);
+      document.getElementById('p1m') && (document.getElementById('p1m').textContent = m);
+      document.getElementById('p1s') && (document.getElementById('p1s').textContent = s);
+      // second countdown (page2)
+      document.getElementById('days') && (document.getElementById('days').textContent = d);
+      document.getElementById('hours') && (document.getElementById('hours').textContent = h);
+      document.getElementById('minutes') && (document.getElementById('minutes').textContent = m);
+      document.getElementById('seconds') && (document.getElementById('seconds').textContent = s);
     }
     setInterval(tick,1000); tick();
 
     /* -------------------------
-       GALLERY (page 4) simple prev/next focus
+       Gallery controls (page 4) - simple focus style
        ------------------------- */
     const photos = ['momento1.jpg','momento2.jpg','momento3.jpg','momento4.jpg','momento5.jpg'];
     let photoIndex = 0;
     const galleryGrid = document.getElementById('galleryGrid');
     function renderGallery(){
-      galleryGrid.innerHTML = photos.map((p,i)=>`<img src="${p}" alt data-index="${i}" style="opacity:${i===photoIndex?1:0.45};transition:opacity .4s">`).join('');
+      galleryGrid.innerHTML = photos.map((p,i)=>`<img src="${p}" alt="Foto ${i+1}" style="opacity:${i===photoIndex?1:0.45};transition:opacity .4s">`).join('');
     }
-    document.getElementById('prevPhoto').addEventListener('click',()=>{ photoIndex=(photoIndex-1+photos.length)%photos.length; renderGallery(); });
-    document.getElementById('nextPhoto').addEventListener('click',()=>{ photoIndex=(photoIndex+1)%photos.length; renderGallery(); });
+    document.getElementById('prevPhoto').addEventListener('click', ()=>{ photoIndex=(photoIndex-1+photos.length)%photos.length; renderGallery(); });
+    document.getElementById('nextPhoto').addEventListener('click', ()=>{ photoIndex=(photoIndex+1)%photos.length; renderGallery(); });
     renderGallery();
 
     /* -------------------------
-       RSVP modal and POST to Google Apps Script endpoint (kept original)
+       RSVP modal + send (keeps original Apps Script endpoint)
        ------------------------- */
     const rsvpModal = document.getElementById('rsvpModal');
     const openRsvp = document.getElementById('openRsvp');
@@ -345,22 +427,22 @@
     const rsvpForm = document.getElementById('rsvpForm');
     const rsvpEndpoint = 'https://script.google.com/macros/s/AKfycbyDEgVJzj-vGvwxFE1eqTmKb4pO4__lXB9gX8gMKGc2yGhlzR15AFPY8vQMvnjoNs01Vg/exec';
 
-    openRsvp.addEventListener('click',()=>{ rsvpModal.classList.add('open'); rsvpModal.setAttribute('aria-hidden','false'); });
-    closeRsvp.addEventListener('click',()=>{ rsvpModal.classList.remove('open'); rsvpModal.setAttribute('aria-hidden','true'); });
-    rsvpForm.addEventListener('submit',async (e)=>{
+    openRsvp.addEventListener('click', ()=>{ rsvpModal.classList.add('open'); rsvpModal.setAttribute('aria-hidden','false'); });
+    closeRsvp.addEventListener('click', ()=>{ rsvpModal.classList.remove('open'); rsvpModal.setAttribute('aria-hidden','true'); });
+    rsvpForm.addEventListener('submit', async (e)=> {
       e.preventDefault();
       const data = new FormData(rsvpForm);
       const payload = {};
-      data.forEach((v,k)=>payload[k]=v);
+      data.forEach((v,k)=> payload[k] = v);
       try{
-        await fetch(rsvpEndpoint, {method:'POST',body:JSON.stringify(payload),headers:{'Content-Type':'application/json'}});
+        await fetch(rsvpEndpoint, { method:'POST', body: JSON.stringify(payload), headers: {'Content-Type':'application/json'} });
         alert('Confirmación enviada. Gracias!');
         rsvpModal.classList.remove('open');
-      }catch(err){console.error(err);alert('No se pudo enviar. Intenta de nuevo.');}
+      }catch(err){ console.error(err); alert('No se pudo enviar. Intenta de nuevo.'); }
     });
 
     /* -------------------------
-       Wishes: send to Google Apps Script and render list (kept original)
+       Wishes: post & load (keeps original endpoint)
        ------------------------- */
     const wishesEndpoint = 'https://script.google.com/macros/s/AKfycbwY2G6aHz1-W9Sk3CUspgJYNf2EhEchr_gNk4mvaZS4wXn7sKIfIV3Qy-Wje2UCKdgC/exec';
     const sendWishBtn = document.getElementById('sendWish');
@@ -372,53 +454,83 @@
         const res = await fetch(wishesEndpoint+'?action=list');
         const data = await res.json();
         wishesList.innerHTML = data.map(w=>`<div style="padding:8px;border-bottom:1px solid #eee"><strong>${w.name||'Anon'}</strong><div>${w.message}</div></div>`).join('');
-      }catch(e){wishesList.innerHTML='<div class="small">No fue posible cargar los deseos (temporal)</div>'}
+      }catch(e){ wishesList.innerHTML = '<div class="small">No fue posible cargar los deseos (temporal)</div>'; }
     }
-    sendWishBtn.addEventListener('click',async ()=>{
+    sendWishBtn.addEventListener('click', async ()=>{
       const message = wishText.value.trim();
       if(!message) return alert('Escribe un deseo');
       try{
-        await fetch(wishesEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message})});
-        wishText.value=''; loadWishes();
-      }catch(e){alert('No fue posible enviar el deseo.');}
+        await fetch(wishesEndpoint, { method:'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({message}) });
+        wishText.value = '';
+        loadWishes();
+      }catch(e){ alert('No fue posible enviar el deseo.'); }
     });
     loadWishes();
 
     /* -------------------------
        Cursor hearts (white, blue, silver, green)
        ------------------------- */
-    const heartColors = ['#ffffff','#66c9ff','#c8c8c8','#a7ffcf'];
-    document.addEventListener('mousemove',(e)=>{
-      // limit number of hearts per move
+    const heartColors = [ '#ffffff', '#66c9ff', '#c8c8c8', '#a7ffcf' ];
+    document.addEventListener('mousemove', (e)=> {
+      // reduce frequency on small devices
+      if(window.innerWidth < 600 && Math.random() > 0.6) return;
       for(let i=0;i<2;i++){
         const heart = document.createElement('div');
-        heart.className='magicHeart';
-        const size = 12 + Math.random()*16;
-        heart.style.width = heart.style.height = size+'px';
-        heart.style.left = (e.clientX + (Math.random()*24-12))+'px';
-        heart.style.top = (e.clientY + (Math.random()*24-12))+'px';
-        // choose color
+        heart.className = 'magicHeart';
+        const size = 10 + Math.random()*18;
+        heart.style.width = heart.style.height = size + 'px';
+        heart.style.left = (e.clientX + (Math.random()*32-16)) + 'px';
+        heart.style.top = (e.clientY + (Math.random()*32-16)) + 'px';
         const color = heartColors[Math.floor(Math.random()*heartColors.length)];
         heart.style.background = color;
         heart.style.borderRadius = '6px';
-        // use a heart unicode character centered with transform
         heart.style.display = 'flex';
         heart.style.alignItems = 'center';
         heart.style.justifyContent = 'center';
-        heart.style.fontSize = (size*0.6)+'px';
+        heart.style.fontSize = (size*0.6) + 'px';
         heart.style.color = (color === '#ffffff' ? '#d0d0d0' : '#fff');
         heart.textContent = '❤';
         document.body.appendChild(heart);
-        setTimeout(()=>{ if(heart && heart.remove) heart.remove(); },1100 + Math.random()*700);
+        setTimeout(()=> heart.remove(), 1200 + Math.random()*600);
       }
     });
 
     /* -------------------------
-       Add to Google Calendar (link) and create ICS for Apple (kept simple)
+       Parallax: mouse + touch adjustments (smooth)
+       ------------------------- */
+    function setBackgroundPositionCentered(section){
+      section.style.backgroundPosition = '50% 50%';
+    }
+    sections.forEach(s => setBackgroundPositionCentered(s));
+
+    let lastMove = 0;
+    window.addEventListener('mousemove', (ev)=>{
+      const now = Date.now();
+      if(now - lastMove < 16) return;
+      lastMove = now;
+      const x = (ev.clientX / window.innerWidth - 0.5) * 12; // up to ±12%
+      const y = (ev.clientY / window.innerHeight - 0.5) * 8; // up to ±8%
+      const active = document.querySelector('.section.active');
+      if(active) active.style.backgroundPosition = `${50 + x}% ${50 + y}%`;
+    });
+
+    window.addEventListener('touchmove', (ev)=>{
+      const t = ev.touches[0];
+      if(!t) return;
+      const x = (t.clientX / window.innerWidth - 0.5) * 8;
+      const y = (t.clientY / window.innerHeight - 0.5) * 6;
+      const active = document.querySelector('.section.active');
+      if(active) active.style.backgroundPosition = `${50 + x}% ${50 + y}%`;
+    }, {passive:true});
+
+    window.addEventListener('resize', ()=> sections.forEach(s => setBackgroundPositionCentered(s)));
+
+    /* -------------------------
+       Add to Google Calendar (simple link) & print
        ------------------------- */
     document.getElementById('addCalendar').addEventListener('click', (e)=>{
       e.preventDefault();
-      const start = '20251228T140000'; // 2pm local
+      const start = '20251228T140000'; // ceremony 2pm local
       const end = '20251228T230000';
       const title = encodeURIComponent('Boda — Abril & Pablo');
       const details = encodeURIComponent('Ceremonia y recepción.');
@@ -426,72 +538,13 @@
       const gcal = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}&location=${location}`;
       window.open(gcal,'_blank');
     });
-
-    document.getElementById('downloadPdf').addEventListener('click',()=>{ window.print(); });
-
-    /* -------------------------
-       Arrow navigation and keyboard
-       ------------------------- */
-    window.addEventListener('keydown', (e)=>{
-      if(e.key==='ArrowRight'){ const next = (currentIndex+1)%sections.length; showSectionByName(sections[next].dataset.name); }
-      else if(e.key==='ArrowLeft'){ const prev = (currentIndex-1+sections.length)%sections.length; showSectionByName(sections[prev].dataset.name); }
-    });
-
-    // also simple previous/next by clicking nav buttons on each card (delegation)
-    document.addEventListener('click', (e)=>{
-      if(e.target.matches('.nav-next')) { const next = (currentIndex+1)%sections.length; showSectionByName(sections[next].dataset.name); }
-      if(e.target.matches('.nav-prev')) { const prev = (currentIndex-1+sections.length)%sections.length; showSectionByName(sections[prev].dataset.name); }
-    });
+    document.getElementById('downloadPdf').addEventListener('click', ()=> window.print());
 
     /* -------------------------
-       PARALLAX: smooth background-position adjustments
-       - works on desktop mousemove and on touchmove for mobile
-       - also resets to center when section changes
+       Initialize current active
        ------------------------- */
-    function setBackgroundPositionCentered(section){
-      section.style.backgroundPosition = '50% 50%';
-    }
-    sections.forEach(s => setBackgroundPositionCentered(s));
-
-    // mouse-based parallax
-    let lastMove = 0;
-    window.addEventListener('mousemove', (ev)=>{
-      const now = Date.now();
-      if(now - lastMove < 16) return; // throttle ~60fps
-      lastMove = now;
-      const x = (ev.clientX / window.innerWidth - 0.5) * 12; // max 12% shift
-      const y = (ev.clientY / window.innerHeight - 0.5) * 8; // max 8% shift
-      // apply gentle parallax to active section
-      const active = document.querySelector('.section.active');
-      if(active){
-        active.style.backgroundPosition = `${50 + x}% ${50 + y}%`;
-      }
-    });
-
-    // touch-based parallax (for mobile)
-    window.addEventListener('touchmove', (ev)=>{
-      const t = ev.touches[0];
-      if(!t) return;
-      const x = (t.clientX / window.innerWidth - 0.5) * 10;
-      const y = (t.clientY / window.innerHeight - 0.5) * 6;
-      const active = document.querySelector('.section.active');
-      if(active){
-        active.style.backgroundPosition = `${50 + x}% ${50 + y}%`;
-      }
-    }, {passive:true});
-
-    // Ensure backgrounds cover and adjust on resize
-    window.addEventListener('resize', ()=>{
-      sections.forEach(s => setBackgroundPositionCentered(s));
-    });
-
-    /* -------------------------
-       Initialize: ensure correct active index variable
-       ------------------------- */
-    // find current index from active class
-    currentIndex = sections.findIndex(s => s.classList.contains('active'));
-    if(currentIndex === -1) { currentIndex = 0; sections[0].classList.add('active'); }
-
+    // ensure class states consistent
+    showSectionByIndex(currentIndex);
   </script>
 </body>
 </html>
